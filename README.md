@@ -11,3 +11,4 @@ pm2 => app.js*n => php-cgi-pool*n => php-router-controller(n*m)
 * https://github.com/sihorton/node-php-cgi/blob/master/index.js
 * https://github.com/hushicai/node-phpcgi
 * https://github.com/fgnass/gateway
+* https://github.com/thomasdondorf/phantomjs-pool
