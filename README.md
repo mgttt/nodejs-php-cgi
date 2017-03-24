@@ -7,9 +7,11 @@ pm2 => app.js*n => php-cgi-pool*n => php-router-controller(n*m)
 # TODO
 
 * add routing/plugin support
-* pooling and threshold-control
+* pooling+auto-release(daily) / threshold-control / auto-release(weekly)
 * performance improve
-* codes clean up
+* code clean up
+* pm2 scripts
+* php-swoole/fpm/nginx integration for enterprise
 
 # reference 
 
