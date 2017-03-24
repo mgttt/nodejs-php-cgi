@@ -9,8 +9,6 @@ module.exports = function(opts){
 	return function(req,res){
 		var tm0=new Date();
 
-		var headersSent = false;
-
 		var url=req.url;
 		var host = (req.headers.host || '').split(':')
 		var _env={
@@ -45,29 +43,33 @@ module.exports = function(opts){
 				//On non-Windows platforms, if options.detached is set to true, the child process will be made the leader of a new process group and session. Note that child processes may continue running after the parent exits regardless of whether they are detached or not. See setsid(2) for more information.
 			}).on('error',function(data){
 				logger.log("cgi error:"+data.toString());//TODO use a logger to do something
-			}).on('exit', function(code){
-				res.end();
 			});
 		cgi.stderr.on('data',function(data) {
 			logger.log("stderr.on(data):"+data.toString());
 		});
+		var buffer=[];
 		res.on('error',function(ex){
 			logger.log("res.on(error):"+ex);
-			//TODO dump req
+			logger.log(buffer);
 		});
+		var headersSent = false;
 		cgi.stdout.on('end',function(){
 			res.end();
 		}).on('data',function(data){
+			buffer.push(data.toString());
 			if (headersSent) {
 				res.write(data);
 			} else {
 				var data_s=data.toString();
 				var lines = data_s.split("\r\n");//TODO may improve the speed later
+				var hhh=[];
 				for(var l=0;l<lines.length;l++) {
 					if (lines[l] == "") {
 						if (!res.getHeader("content-length")) {
-							//stream the output
 							res.setHeader('Transfer-Encoding', 'chunked');
+						}
+						for(var vv of hhh){
+							res.setHeader(vv[0], vv[1]);
 						}
 						res.writeHead(200);
 						headersSent = true;
@@ -76,7 +78,7 @@ module.exports = function(opts){
 					} else {
 						var header = lines[l].split(":");
 						if(header[0]=='X-Powered-By'){ continue; }
-						res.setHeader(header[0], header[1]||'');
+						hhh.push([header[0],header[1]||'']);
 					}
 				}//for
 			}//if

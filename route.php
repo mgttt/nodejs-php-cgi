@@ -1,26 +1,12 @@
 <?php
 error_reporting(E_ERROR|E_COMPILE_ERROR|E_PARSE|E_CORE_ERROR|E_USER_ERROR);
 
-#WARNING:  this controller are for referece only.#V20170324
+#WARNING: this router/controller are for referece only.#V20170324
 
-(function($webroot,$uu,$POST){
-	//global $HTTP_RAW_POST_DATA,$_POST;
-	//print "<pre>webroot=$webroot,uu=$uu,HTTP_RAW_POST_DATA=$HTTP_RAW_POST_DATA\n";
+(function($webroot,$uu,$HTTP_RAW_POST_DATA){
 	if($uu==''){
-		//chdir('webroot/');require 'index.php';return;
 		require $webroot.'index.php';return;
-		//echo getcwd();return;
 	}
-	//just a example how to do reverse-proxy:
-	//if(preg_match("/^px(\.php)?\//",$uu)){
-	//	//special handling
-	//	if(file_exists('px.php')){
-	//		require 'px.php';
-	//	}else{
-	//		print "404 $uu";
-	//	}
-	//	return;
-	//}
 	$uu=$webroot.$uu;
 	foreach(
 		array(
@@ -30,7 +16,6 @@ error_reporting(E_ERROR|E_COMPILE_ERROR|E_PARSE|E_CORE_ERROR|E_USER_ERROR);
 				$uu=dirname($uu).'/'.($matches[5]=='static'?'static':'index').'.php';
 			},
 
-			//patch for ACE{:
 			"/([^\/]*)\.shtml$/"=>function(&$uu,$pattern,$matches){
 				$_REQUEST['_p']=$_GET['_p']=$matches[1];
 				if(file_exists(dirname($uu).'/shtml.php')){
@@ -48,7 +33,6 @@ error_reporting(E_ERROR|E_COMPILE_ERROR|E_PARSE|E_CORE_ERROR|E_USER_ERROR);
 				$uu=dirname($uu).'/static.php';
 			},
 			//TODO ./upload/ mapping to ..
-			//patch for ACE}:
 
 			"/\/$/"=>function($uu){
 				if(file_exists($uu .'index.php')){
