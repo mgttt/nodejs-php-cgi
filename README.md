@@ -1,9 +1,15 @@
 # nodejs-php-cgi
 
-看了一圈，没我想要的，就随手写个玩一下。大概目标就是
 ```
 pm2 => app.js*n => php-cgi-pool*n => php-router-controller(n*m)
 ```
+
+# TODO
+
+* add routing/plugin support
+* pooling and threshold-control
+* performance improve
+* codes clean up
 
 # reference 
 
