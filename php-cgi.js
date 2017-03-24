@@ -51,6 +51,10 @@ module.exports = function(opts){
 		cgi.stderr.on('data',function(data) {
 			logger.log("stderr.on(data):"+data.toString());
 		});
+		res.on('error',function(ex){
+			logger.log("res.on(error):"+ex);
+			//TODO dump req
+		});
 		cgi.stdout.on('end',function(){
 			res.end();
 		}).on('data',function(data){
@@ -76,8 +80,11 @@ module.exports = function(opts){
 					}
 				}//for
 			}//if
-		});
-
+		})
+		//.on('error',function(data){
+		//	logger.log("stderr.stdout.on(error):"+data);
+		//})
+		;
 		req.pipe(cgi.stdin);
-	};
+	};//return function
 };
