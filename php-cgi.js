@@ -13,7 +13,7 @@ module.exports = function(opts){
 		var host = (req.headers.host || '').split(':')
 		var _env={
 			__proto__: opts.env || {} //extends from..
-			,SCRIPT_FILENAME:__dirname + "/route.php"
+			,SCRIPT_FILENAME:__dirname + path.sep + "route.php"
 			,REMOTE_ADDR: req.connection.remoteAddress //TODO x-forwarded-for, x-real-ip
 			//,'PATH_INFO':'/Users/wanjochan/Downloads/github/nodejs-php-cgi/test.php'
 			//,'SERVER_SOFTWARE':"nodejs"
@@ -35,6 +35,7 @@ module.exports = function(opts){
 		for (var theHeader in req.headers) {
 			_env['HTTP_' + theHeader.toUpperCase().split("-").join("_")] = req.headers[theHeader];
 		}
+		//logger.log(_env);
 		var cgi = spawn(opts.bin || '/usr/local/bin/php-cgi',
 			opts.binarga || [],
 			{'env':_env
@@ -56,6 +57,7 @@ module.exports = function(opts){
 		cgi.stdout.on('end',function(){
 			res.end();
 		}).on('data',function(data){
+			//logger.log(data.toString());
 			buffer.push(data.toString());
 			if (headersSent) {
 				res.write(data);
